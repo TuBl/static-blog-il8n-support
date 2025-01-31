@@ -19,7 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./*"],
+      "@mdx-js/mdx/*": ["./node_modules/@mdx-js/mdx/lib/*"],
+      "next-themes/dist/*": ["./node_modules/next-themes/dist/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
