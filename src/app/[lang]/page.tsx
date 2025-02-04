@@ -9,8 +9,13 @@ export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }));
 }
 
-export default async function Summary() {
-  const lang = "en";
+export default async function Summary({
+  params,
+}: {
+  params: { lang: "en" | "ar" };
+}) {
+  const { lang } = await params;
+  console.log("lang", lang)
   const dict = await getDictionary(lang);
   const { content, frontmatter } = getPageData(`summary.${lang}.mdx`);
 

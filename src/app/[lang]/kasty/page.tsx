@@ -10,10 +10,11 @@ export async function generateStaticParams() {
 }
 
 export default async function Summary({
-  params: { lang },
+  params
 }: {
   params: { lang: "en" | "ar" };
 }) {
+  const {lang} = await params;
   const dict = await getDictionary(lang);
   const { content, frontmatter } = getPageData(`summary.${lang}.mdx`);
 
