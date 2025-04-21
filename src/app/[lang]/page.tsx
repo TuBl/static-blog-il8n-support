@@ -9,7 +9,7 @@ export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }));
 }
 
-export default async function Summary({
+export default async function Home({
   params,
 }: {
   params: { lang: "en" | "ar" };
@@ -17,7 +17,7 @@ export default async function Summary({
   const { lang } = await params;
   console.log("lang", lang)
   const dict = await getDictionary(lang);
-  const { content, frontmatter } = getPageData(`summary.${lang}.mdx`);
+  const { content, frontmatter } = getPageData(`home.${lang}.mdx`);
 
   return (
     <main className="min-h-screen bg-background">

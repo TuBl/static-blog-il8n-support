@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, Sun, Moon, Monitor } from "lucide-react"; // Import a monitor icon for "system"
+import { Heart, Sun, Moon } from "lucide-react"; // Import a monitor icon for "system"
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { LanguageToggle } from "@/src/components/navigation/language-toggle";
@@ -10,14 +10,13 @@ interface NavbarProps {
   lang: string;
   dictionary: {
     home: string;
-    contacts: string;
-    summary: string;
+    hobbies: string;
     title: string;
   };
 }
 
 export function Navbar({ lang, dictionary }: NavbarProps) {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const isRTL = lang === "ar";
   useEffect(() => {
@@ -54,16 +53,10 @@ export function Navbar({ lang, dictionary }: NavbarProps) {
               {dictionary.home}
             </Link>
             <Link
-              href={`/${lang}/contacts`}
+              href={`/${lang}/hobbies`}
               className="text-sm font-medium transition-colors hover:text-primary"
             >
-              {dictionary.contacts}
-            </Link>
-            <Link
-              href={`/${lang}/summary`}
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              {dictionary.summary}
+              {dictionary.hobbies}
             </Link>
           </div>
         </div>

@@ -16,7 +16,7 @@ export default async function Summary({
 }) {
   const {lang} = await params;
   const dict = await getDictionary(lang);
-  const { content, frontmatter } = getPageData(`summary.${lang}.mdx`);
+  const { content, frontmatter } = getPageData(`hobbies.${lang}.mdx`);
 
   return (
     <main className="min-h-screen bg-background">
