@@ -1,36 +1,182 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌍 3eza – Localized MDX-powered Markdown Pages with Theming Support
 
-## Getting Started
+A sleek, developer-friendly template for building multilingual websites with rich Markdown content, dark/light theme toggling, and full support for JSX within `.mdx` files.
 
-First, run the development server:
+Built on top of [Next.js App Router](https://nextjs.org/docs/app/building-your-application/routing), this project leverages the power of [`@mdx-js/mdx`](https://mdxjs.com/) to let you write Markdown that seamlessly integrates with React components.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## ✨ Features
+
+- ✅ **Internationalization (i18n)** – Easy support for multiple locales like English and Arabic.
+- 💡 **Dark/Light Theme Ready** – Works beautifully with TailwindCSS + `prose` utilities.
+- 📘 **MDX Support** – Use JSX directly in markdown files.
+- 🧩 **Component Injection** – Customize rendering behavior in `src/components/Mdx.tsx`.
+- 📁 **Filesystem-Based Markdown Routing** – Add pages and routes with minimal config.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Create a Markdown Page
+
+Add your localized `.mdx` files to `src/content/markdown`.  
+Use the language code in the filename:
+
+```
+src/content/markdown/home.en.mdx
+src/content/markdown/home.ar.mdx
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Each file can contain frontmatter metadata like:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```mdx
+---
+title: "Welcome"
+subtitle: "Explore the world of 3eza"
+heroImage: "/hero-image.png"
+---
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+### 2. Create the Route
 
-To learn more about Next.js, take a look at the following resources:
+Create a Next.js App Router page at:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/app/[lang]/your-route-name/page.tsx
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Access the content with:
 
-## Deploy on Vercel
+```tsx
+const { content, frontmatter } = getPageData("your-file.en.mdx");
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 3. Add Your Translations
+
+Update the appropriate dictionary file under `src/dictionaries/`:
+
+```jsonc
+// src/dictionaries/en.json
+{
+  "navigation": {
+    "home": "Home",
+    "hobbies": "Hobbies",
+    "title": "3eza"
+  }
+}
+```
+
+---
+
+## 🧠 Helper Utilities
+
+### `getDictionary()` – Language-Aware Dictionary Loader
+
+Located in `src/lib/dictionary.ts`:
+
+```ts
+const dictionaries = {
+  en: () => import('@/src/dictionaries/en.json').then(m => m.default),
+  ar: () => import('@/src/dictionaries/ar.json').then(m => m.default),
+};
+
+export const getDictionary = async (locale: Locale) => {
+  return dictionaries[locale]();
+};
+```
+
+---
+
+### `getPageData()` – Parse Markdown Frontmatter + Content
+
+Located in `src/lib/markdown.ts`:
+
+```ts
+export function getPageData(filename: string): PageData {
+  const filePath = path.join(process.cwd(), 'src/content/markdown', filename);
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const { data, content } = matter(fileContents);
+
+  return {
+    content,
+    frontmatter: data as PageData['frontmatter'],
+  };
+}
+```
+
+---
+
+## 🔧 MDX Customization
+
+MDX rendering is powered by [`@mdx-js/mdx`](https://mdxjs.com/), and is fully customizable in:
+
+```
+src/components/Mdx.tsx
+```
+
+Features:
+- Uses `remark-gfm` for GitHub-flavored Markdown
+- Adds slugs and autolinks to headings via `rehype-slug` and `rehype-autolink-headings`
+- Supports custom component injection like `<NextImage>` or `<UnstyledCode>`
+
+Example usage:
+
+```tsx
+<MDX content={content} lang="en" />
+```
+
+Render output is styled using `prose` classes with RTL support for Arabic content.
+
+---
+
+## 📦 Dependencies
+
+- `next` + App Router
+- `@mdx-js/mdx`
+- `remark-gfm`
+- `rehype-slug`
+- `rehype-autolink-headings`
+- `gray-matter`
+- `tailwindcss` with typography plugin
+
+---
+
+## 📁 Project Structure Overview
+
+```
+src/
+├── app/
+│   └── [lang]/[page]/page.tsx     // Route per locale
+├── content/markdown/              // .mdx content files
+├── dictionaries/                  // i18n translation JSON
+├── lib/
+│   ├── dictionary.ts              // getDictionary()
+│   └── markdown.ts                // getPageData()
+├── components/
+│   └── Mdx.tsx                    // MDX rendering logic
+```
+
+---
+
+## 🌗 Theme Support
+
+This project works great in both dark and light modes. Make sure to set up your Tailwind config to support `darkMode: 'class'` and toggle the theme accordingly in your layout.
+
+---
+
+## 📣 Contributing
+
+Contributions, bug reports, and suggestions are welcome! Feel free to fork this repo and build your own content platform.
+
+---
+
+## 🐾 Built with love by [Tariq](https://github.com/TuBl)
+
+And inspired by a black cat named **Kastana** 🖤
+
+---
